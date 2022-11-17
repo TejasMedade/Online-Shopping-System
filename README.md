@@ -43,6 +43,7 @@ The application will be used by the **two** categories of users:
 - SPRING DATA JPA
 - SPRING BOOT DEVTOOLS
 - SPRING WEB
+- HIBERNATE
 - MYSQL DRIVER
 - VALIDATION
 - LOMBOK
