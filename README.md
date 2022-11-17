@@ -32,7 +32,6 @@ The application will be used by the **two** categories of users:
 - JAVA
 - SPRING
 - SPRINGBOOT
-- SPRING DATA JPA
 - HIBERNATE
 - MAVEN
 - J.D.B.C
@@ -41,7 +40,15 @@ The application will be used by the **two** categories of users:
 - SWAGGER UI
 - POSTMAN
 
+## Dependencies
 
+- SPRING DATA JPA
+- SPRING BOOT DEVTOOLS
+- SPRING WEB
+- MYSQL DRIVER
+- VALIDATION
+- LOMBOK
+- SWAGGER UI
 
 
 
