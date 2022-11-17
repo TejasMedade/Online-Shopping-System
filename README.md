@@ -36,8 +36,6 @@ The application will be used by the **two** categories of users:
 - MAVEN
 - J.D.B.C
 - MYSQL
-- LOMBOK
-- SWAGGER UI
 - POSTMAN
 
 ## Dependencies
