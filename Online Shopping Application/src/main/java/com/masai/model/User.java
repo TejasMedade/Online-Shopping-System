@@ -23,6 +23,7 @@ public class User {
 	@Id
 	private String id;
 	private String password;
-	private String role;
 
+	// Choose From Admin or Customer
+	private String role;
 }

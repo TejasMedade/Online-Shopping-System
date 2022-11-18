@@ -21,7 +21,7 @@ import com.masai.model.Product;
 import com.masai.repository.CartRepo;
 import com.masai.repository.ProductRepo;
 import com.masai.services.CartService;
-import com.masai.services.LoginLogoutService;
+import com.masai.services.LoginLogoutCustomerService;
 
 /**
  * @author tejas
@@ -38,13 +38,13 @@ public class CartServiceImplementation implements CartService {
 	private ProductRepo productRepo;
 
 	@Autowired
-	private LoginLogoutService loginLogoutServiceImplementation;
+	private LoginLogoutCustomerService loginLogoutCustomerServiceImplementation;
 
 	@Override
 	public String deleteallproducts(String key)
 			throws ProductException, CartException, LoginException, CustomerException {
 
-		Customer customer = loginLogoutServiceImplementation.validateCustomer(key);
+		Customer customer = loginLogoutCustomerServiceImplementation.validateCustomer(key);
 
 		if (customer != null) {
 
@@ -62,20 +62,6 @@ public class CartServiceImplementation implements CartService {
 				} else {
 
 					List<ProductDTO> remove_products = cart.getProducts();
-
-					for (ProductDTO p : remove_products) {
-
-						Optional<Product> optional_product = productRepo.findById(p.getProductId());
-
-						Product product = optional_product.get();
-
-						Integer available_quantity = product.getQuantity();
-
-						product.setQuantity(available_quantity + p.getQuantity());
-
-						productRepo.save(product);
-
-					}
 
 					listofproducts.removeAll(remove_products);
 
@@ -100,7 +86,7 @@ public class CartServiceImplementation implements CartService {
 	public List<ProductDTO> viewallproducts(String key)
 			throws LoginException, CustomerException, ProductException, CartException {
 
-		Customer customer = loginLogoutServiceImplementation.validateCustomer(key);
+		Customer customer = loginLogoutCustomerServiceImplementation.validateCustomer(key);
 
 		if (customer != null) {
 
@@ -134,7 +120,7 @@ public class CartServiceImplementation implements CartService {
 	public Cart addproduct(Integer productId, Integer quantity, String key)
 			throws ProductException, LoginException, CustomerException, CartException {
 
-		Customer customer = loginLogoutServiceImplementation.validateCustomer(key);
+		Customer customer = loginLogoutCustomerServiceImplementation.validateCustomer(key);
 
 		if (customer != null) {
 
@@ -148,17 +134,6 @@ public class CartServiceImplementation implements CartService {
 
 				if (available_quantity >= quantity) {
 
-					ProductDTO productDto = new ProductDTO();
-
-					productDto.setProductId(database_product.getProductId());
-					productDto.setProductName(database_product.getProductName());
-					productDto.setColour(database_product.getColour());
-					productDto.setDimension(database_product.getDimension());
-					productDto.setManufacturer(database_product.getDimension());
-					productDto.setPrice(database_product.getPrice());
-
-					productDto.setQuantity(quantity);
-
 					Optional<Cart> optional_cart = cartRepo.findByCustomer(customer);
 
 					if (optional_cart.isPresent()) {
@@ -167,15 +142,29 @@ public class CartServiceImplementation implements CartService {
 
 						List<ProductDTO> listofproducts = cart.getProducts();
 
-						listofproducts.add(productDto);
+						for (ProductDTO p : listofproducts) {
+
+							if (Objects.equals(p.getProductId(), productId)) {
+
+								throw new ProductException("Product Already Added To Cart !");
+							}
+						}
+
+						ProductDTO productDTO = new ProductDTO();
+
+						productDTO.setProductId(database_product.getProductId());
+						productDTO.setProductName(database_product.getProductName());
+						productDTO.setQuantity(quantity);
+						productDTO.setColour(database_product.getColour());
+						productDTO.setDimension(database_product.getDimension());
+						productDTO.setPrice(database_product.getPrice());
+						productDTO.setManufacturer(database_product.getManufacturer());
+
+						listofproducts.add(productDTO);
 
 						cart.setProducts(listofproducts);
 
 						cartRepo.save(cart);
-
-						database_product.setQuantity(available_quantity - quantity);
-
-						productRepo.save(database_product);
 
 						return cart;
 
@@ -201,7 +190,7 @@ public class CartServiceImplementation implements CartService {
 	public Cart deleteproduct(Integer productId, String key)
 			throws LoginException, CustomerException, CartException, ProductException {
 
-		Customer customer = loginLogoutServiceImplementation.validateCustomer(key);
+		Customer customer = loginLogoutCustomerServiceImplementation.validateCustomer(key);
 
 		if (customer != null) {
 
@@ -211,62 +200,39 @@ public class CartServiceImplementation implements CartService {
 
 				Cart cart = optional_cart.get();
 
-				Optional<Product> optional_product = productRepo.findById(productId);
+				List<ProductDTO> list_of_products = cart.getProducts();
 
-				if (optional_product.isPresent()) {
+				if (!list_of_products.isEmpty()) {
 
-					Product database_product = optional_product.get();
+					Boolean flag = false;
 
-					List<ProductDTO> list_of_products = cart.getProducts();
+					for (int i = 0; i < list_of_products.size(); i++) {
 
-					if (!list_of_products.isEmpty()) {
+						ProductDTO p = list_of_products.get(i);
 
-						Boolean flag = false;
+						if (Objects.equals(p.getProductId(), productId)) {
 
-						for (int i = 0; i < list_of_products.size(); i++) {
+							list_of_products.remove(p);
 
-							ProductDTO p = list_of_products.get(i);
+							cart.setProducts(list_of_products);
 
-							if (Objects.equals(p.getProductId(), productId)) {
-
-								ProductDTO delete_product = p;
-
-								System.out.println(delete_product);
-
-								Integer deleted_quantity = delete_product.getQuantity();
-
-								database_product.setQuantity(database_product.getQuantity() + deleted_quantity);
-
-								list_of_products.remove(delete_product);
-
-								System.out.println("List" + list_of_products);
-
-								cart.setProducts(list_of_products);
-
-								flag = true;
-
-							}
-						}
-
-						if (Boolean.TRUE.equals(flag)) {
-
-							cartRepo.save(cart);
-
-							productRepo.save(database_product);
-
-							return cart;
-
-						} else {
-							throw new ProductException("No Products Found in the Cart !");
+							flag = true;
 						}
 					}
 
-					else {
-						throw new ProductException("No Products Found in the Cart !");
-					}
+					if (Boolean.TRUE.equals(flag)) {
 
-				} else {
-					throw new ProductException("No Products Found With The ProductId : " + productId);
+						cartRepo.save(cart);
+
+						return cart;
+
+					} else {
+						throw new ProductException("No Products Found in the Cart With Product Id : " + productId);
+					}
+				}
+
+				else {
+					throw new ProductException("No Products Found in the Cart !");
 				}
 
 			} else {
@@ -283,7 +249,7 @@ public class CartServiceImplementation implements CartService {
 	public Cart udpateproductquantity(String key, Integer productId, Integer quantity)
 			throws CartException, LoginException, CustomerException, ProductException {
 
-		Customer customer = loginLogoutServiceImplementation.validateCustomer(key);
+		Customer customer = loginLogoutCustomerServiceImplementation.validateCustomer(key);
 
 		if (customer != null) {
 
@@ -311,15 +277,9 @@ public class CartServiceImplementation implements CartService {
 
 							if (Objects.equals(s.getProductId(), productId)) {
 
-								Integer intial_cart_quantity = s.getQuantity();
-
-								Integer total_quantity = intial_cart_quantity + available_quantity;
-
-								if (total_quantity >= quantity) {
+								if (available_quantity >= quantity) {
 
 									s.setQuantity(quantity);
-
-									product.setQuantity(total_quantity - quantity);
 
 									flag = true;
 								} else {
@@ -333,9 +293,9 @@ public class CartServiceImplementation implements CartService {
 
 						if (flag == true) {
 
-							cartRepo.save(cart);
+							cart.setProducts(listofproducts);
 
-							productRepo.save(product);
+							cartRepo.save(cart);
 
 							return cart;
 						} else {

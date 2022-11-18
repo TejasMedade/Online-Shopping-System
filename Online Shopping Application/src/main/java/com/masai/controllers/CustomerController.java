@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.masai.exceptions.AdminException;
 import com.masai.exceptions.CustomerException;
 import com.masai.exceptions.LoginException;
 import com.masai.model.Customer;
@@ -27,6 +28,8 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
  * @author tejas
  *
  */
+
+
 
 @RestController
 @RequestMapping("/customer")
@@ -40,7 +43,7 @@ public class CustomerController {
 
 		Customer added_customer = customerService.addCustomer(customer);
 
-		return new ResponseEntity(added_customer, HttpStatus.ACCEPTED);
+		return new ResponseEntity<Customer>(added_customer, HttpStatus.ACCEPTED);
 
 	}
 
@@ -50,7 +53,7 @@ public class CustomerController {
 
 		Customer updated_customer = customerService.updateCustomer(key, customer);
 
-		return new ResponseEntity(updated_customer, HttpStatus.ACCEPTED);
+		return new ResponseEntity<Customer>(updated_customer, HttpStatus.ACCEPTED);
 	}
 
 	@DeleteMapping("/deleteCustomer")
@@ -59,7 +62,7 @@ public class CustomerController {
 
 		String result = customerService.removeCustomer(key, customer_Id);
 
-		return new ResponseEntity(result, HttpStatus.OK);
+		return new ResponseEntity<String>(result, HttpStatus.OK);
 
 	}
 
@@ -69,17 +72,17 @@ public class CustomerController {
 
 		Customer customer = customerService.viewCustomer(key, customer_Id);
 
-		return new ResponseEntity(customer, HttpStatus.OK);
+		return new ResponseEntity<Customer>(customer, HttpStatus.OK);
 	}
 
 	// Check for Admin Role
 	@GetMapping("/allCustomers")
 	public ResponseEntity<List<Customer>> viewAllCustomersHandler(@RequestParam String key)
-			throws CustomerException, LoginException {
+			throws CustomerException, LoginException, AdminException {
 
 		List<Customer> listofcustomers = customerService.viewAllCustomers(key);
 
-		return new ResponseEntity(listofcustomers, HttpStatus.OK);
+		return new ResponseEntity<List<Customer>>(listofcustomers, HttpStatus.OK);
 	}
 
 }

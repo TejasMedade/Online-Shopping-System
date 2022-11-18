@@ -9,8 +9,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.masai.exceptions.AdminException;
 import com.masai.exceptions.CustomerException;
 import com.masai.exceptions.LoginException;
+import com.masai.model.Admin;
 import com.masai.model.Cart;
 import com.masai.model.Customer;
 import com.masai.repository.CartRepo;
@@ -28,7 +30,10 @@ public class CustomerServiceImplementation implements CustomerService {
 	private CustomerRepo customerRepo;
 
 	@Autowired
-	private LoginLogoutServiceimplementation loginLogoutServiceimplementation;
+	private LoginLogoutCustomerServiceImplementation loginLogoutCustomerServiceimplementation;
+
+	@Autowired
+	private LoginLogoutAdminServiceImplementation loginLogoutAdminServiceimplementation;
 
 	@Autowired
 	private CartRepo cartRepo;
@@ -56,7 +61,7 @@ public class CustomerServiceImplementation implements CustomerService {
 	@Override
 	public Customer updateCustomer(String key, Customer customer) throws CustomerException, LoginException {
 
-		Customer validate_customer = loginLogoutServiceimplementation.validateCustomer(key);
+		Customer validate_customer = loginLogoutCustomerServiceimplementation.validateCustomer(key);
 
 		if (validate_customer != null) {
 
@@ -71,7 +76,7 @@ public class CustomerServiceImplementation implements CustomerService {
 	@Override
 	public String removeCustomer(String key, Integer customer_Id) throws CustomerException, LoginException {
 
-		Customer validate_customer = loginLogoutServiceimplementation.validateCustomer(key);
+		Customer validate_customer = loginLogoutCustomerServiceimplementation.validateCustomer(key);
 
 		if (validate_customer != null) {
 
@@ -88,7 +93,7 @@ public class CustomerServiceImplementation implements CustomerService {
 	@Override
 	public Customer viewCustomer(String key, Integer customer_Id) throws CustomerException, LoginException {
 
-		Customer validate_customer = loginLogoutServiceimplementation.validateCustomer(key);
+		Customer validate_customer = loginLogoutCustomerServiceimplementation.validateCustomer(key);
 
 		if (validate_customer != null) {
 
@@ -108,11 +113,11 @@ public class CustomerServiceImplementation implements CustomerService {
 	}
 
 	@Override
-	public List<Customer> viewAllCustomers(String key) throws CustomerException, LoginException {
+	public List<Customer> viewAllCustomers(String key) throws AdminException, CustomerException, LoginException {
 
-		Customer validate_customer = loginLogoutServiceimplementation.validateCustomer(key);
+		Admin validate_admin = loginLogoutAdminServiceimplementation.validateAdmin(key);
 
-		if (validate_customer != null) {
+		if (validate_admin != null) {
 
 			List<Customer> listofcustomers = customerRepo.findAll();
 
@@ -123,7 +128,7 @@ public class CustomerServiceImplementation implements CustomerService {
 			}
 
 		} else {
-			throw new CustomerException("Invalid Key, Please Login In !");
+			throw new AdminException("Invalid Key, Please Login In as Admin!");
 		}
 
 	}

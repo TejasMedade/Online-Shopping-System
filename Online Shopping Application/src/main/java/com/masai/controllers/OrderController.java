@@ -3,7 +3,6 @@
  */
 package com.masai.controllers;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,15 +11,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.masai.exceptions.AdminException;
 import com.masai.exceptions.CartException;
 import com.masai.exceptions.CustomerException;
 import com.masai.exceptions.LoginException;
 import com.masai.exceptions.OrderException;
+import com.masai.exceptions.ProductException;
 import com.masai.exceptions.UserException;
 import com.masai.model.Order;
 import com.masai.model.User;
@@ -42,20 +42,20 @@ public class OrderController {
 
 	@PostMapping("/addOrder")
 	public ResponseEntity<Order> addOrderHandler(@RequestParam String key)
-			throws LoginException, CustomerException, OrderException, CartException {
+			throws LoginException, CustomerException, OrderException, CartException, ProductException {
 
 		Order order = orderService.addOrder(key);
 
-		return new ResponseEntity(order, HttpStatus.ACCEPTED);
+		return new ResponseEntity<Order>(order, HttpStatus.ACCEPTED);
 	}
 
 	@DeleteMapping("/deleteOrder")
-	public ResponseEntity<String> removeOrderHandler(@RequestParam Integer order_Id, @RequestParam String key)
+	public ResponseEntity<Order> removeOrderHandler(@RequestParam Integer order_Id, @RequestParam String key)
 			throws OrderException, LoginException, CustomerException {
 
-		String result = orderService.removeOrder(order_Id, key);
+		Order order = orderService.removeOrder(order_Id, key);
 
-		return new ResponseEntity(result, HttpStatus.OK);
+		return new ResponseEntity<Order>(order, HttpStatus.OK);
 
 	}
 
@@ -65,26 +65,28 @@ public class OrderController {
 
 		List<Order> listOfOrders = orderService.viewOrder(key);
 
-		return new ResponseEntity(listOfOrders, HttpStatus.OK);
+		return new ResponseEntity<List<Order>>(listOfOrders, HttpStatus.OK);
 	}
 
 	@PostMapping("/allOrders")
-	public ResponseEntity<List<Order>> viewallOrdersByDateHandler(@RequestParam String key, @RequestParam LocalDate date)
-			throws OrderException, CustomerException, LoginException {
+	public ResponseEntity<List<Order>> viewallOrdersByDateHandler(@RequestParam String key,
+			@RequestParam String stringdate) throws OrderException, CustomerException, LoginException {
 
-		List<Order> listOfOrders = orderService.viewOrder(key);
+		// Please Make Sure Date should be in this format "YYYY-MM-DD"
 
-		return new ResponseEntity(listOfOrders, HttpStatus.OK);
+		List<Order> listOfOrders = orderService.viewallOrdersByDate(key, stringdate);
+
+		return new ResponseEntity<List<Order>>(listOfOrders, HttpStatus.OK);
 
 	}
 
 	@GetMapping("/viewLocationOrders")
-	public ResponseEntity<List<Order>> viewAllOrdersByLocationHandler(@RequestParam String key, @RequestParam String location)
-			throws OrderException, LoginException, CustomerException {
+	public ResponseEntity<List<Order>> viewAllOrdersByLocationHandler(@RequestParam String key,
+			@RequestParam String location) throws OrderException, LoginException, CustomerException, AdminException {
 
 		List<Order> listoforders = orderService.viewAllOrdersByLocation(key, location);
 
-		return new ResponseEntity(listoforders, HttpStatus.OK);
+		return new ResponseEntity<List<Order>>(listoforders, HttpStatus.OK);
 
 	}
 
@@ -94,7 +96,7 @@ public class OrderController {
 
 		List<Order> listoforders = orderService.viewAllOrdersbyUserId(user, key);
 
-		return new ResponseEntity(listoforders, HttpStatus.OK);
+		return new ResponseEntity<List<Order>>(listoforders, HttpStatus.OK);
 
 	}
 

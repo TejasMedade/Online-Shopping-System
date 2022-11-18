@@ -10,13 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.masai.exceptions.AddressException;
+import com.masai.exceptions.AdminException;
 import com.masai.exceptions.CustomerException;
 import com.masai.exceptions.LoginException;
 import com.masai.model.Address;
+import com.masai.model.Admin;
 import com.masai.model.Customer;
 import com.masai.repository.AddressRepo;
-import com.masai.repository.CustomerRepo;
 import com.masai.services.AddressService;
+import com.masai.services.LoginLogoutAdminService;
+import com.masai.services.LoginLogoutCustomerService;
 
 /**
  * @author tejas
@@ -26,18 +29,18 @@ import com.masai.services.AddressService;
 public class AddressServiceImplementation implements AddressService {
 
 	@Autowired
-	private CustomerRepo customerRepo;
-
-	@Autowired
 	private AddressRepo addressRepo;
 
 	@Autowired
-	private LoginLogoutServiceimplementation loginLogoutServiceImplementation;
+	private LoginLogoutCustomerService loginLogoutCustomerServiceImplementation;
+
+	@Autowired
+	private LoginLogoutAdminService loginLogoutAdminServiceImplementation;
 
 	@Override
 	public String addAddress(String key, Address address) throws CustomerException, LoginException {
 
-		Customer customer = loginLogoutServiceImplementation.validateCustomer(key);
+		Customer customer = loginLogoutCustomerServiceImplementation.validateCustomer(key);
 
 		if (customer != null) {
 
@@ -55,7 +58,7 @@ public class AddressServiceImplementation implements AddressService {
 	@Override
 	public String updateAddress(String key, Address address) throws CustomerException, LoginException {
 
-		Customer customer = loginLogoutServiceImplementation.validateCustomer(key);
+		Customer customer = loginLogoutCustomerServiceImplementation.validateCustomer(key);
 
 		if (customer != null) {
 
@@ -72,17 +75,24 @@ public class AddressServiceImplementation implements AddressService {
 	}
 
 	@Override
-	public String removeAddress(String key, Integer addressId) throws CustomerException, LoginException {
+	public String removeAddress(String key, Integer addressId)
+			throws CustomerException, LoginException, AddressException {
 
-		Customer customer = loginLogoutServiceImplementation.validateCustomer(key);
+		Customer customer = loginLogoutCustomerServiceImplementation.validateCustomer(key);
 
 		if (customer != null) {
 
 			Optional<Address> optional_address = addressRepo.findById(addressId);
 
-			addressRepo.delete(optional_address.get());
+			if (optional_address.isPresent()) {
 
-			return "Address Deleted Successfully !";
+				addressRepo.delete(optional_address.get());
+
+				return "Address Deleted Successfully !";
+
+			} else {
+				throw new AddressException("No Address Found With The Address ID : " + addressId);
+			}
 
 		} else {
 			throw new CustomerException("No Customer Found, Please Login In !");
@@ -90,11 +100,11 @@ public class AddressServiceImplementation implements AddressService {
 	}
 
 	@Override
-	public List<Address> viewAllAddress(String key) throws CustomerException, LoginException, AddressException {
+	public List<Address> viewAllAddress(String key) throws AdminException, LoginException, AddressException {
 
-		Customer customer = loginLogoutServiceImplementation.validateCustomer(key);
+		Admin admin = loginLogoutAdminServiceImplementation.validateAdmin(key);
 
-		if (customer != null) {
+		if (admin != null) {
 
 			List<Address> listofaddresses = addressRepo.findAll();
 
@@ -106,7 +116,7 @@ public class AddressServiceImplementation implements AddressService {
 			}
 
 		} else {
-			throw new CustomerException("No Customer Found, Please Login In !");
+			throw new AdminException("Invalid Key, Please Login In as Admin !");
 		}
 
 	}
@@ -114,7 +124,7 @@ public class AddressServiceImplementation implements AddressService {
 	@Override
 	public Address viewAddress(String key) throws CustomerException, LoginException, AddressException {
 
-		Customer customer = loginLogoutServiceImplementation.validateCustomer(key);
+		Customer customer = loginLogoutCustomerServiceImplementation.validateCustomer(key);
 
 		if (customer != null) {
 

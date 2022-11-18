@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import com.masai.model.Cart;
 import com.masai.model.Customer;
-import com.masai.model.Product;
 
 /**
  * @author tejas

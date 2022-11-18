@@ -13,11 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.masai.dto.ProductDTO;
+import com.masai.exceptions.AdminException;
 import com.masai.exceptions.CartException;
 import com.masai.exceptions.CustomerException;
 import com.masai.exceptions.LoginException;
 import com.masai.exceptions.OrderException;
+import com.masai.exceptions.ProductException;
 import com.masai.exceptions.UserException;
+import com.masai.model.Admin;
 import com.masai.model.Cart;
 import com.masai.model.Customer;
 import com.masai.model.Order;
@@ -26,20 +29,15 @@ import com.masai.model.User;
 import com.masai.repository.CartRepo;
 import com.masai.repository.CustomerRepo;
 import com.masai.repository.OrderRepo;
-import com.masai.services.LoginLogoutService;
+import com.masai.repository.ProductRepo;
+import com.masai.services.LoginLogoutAdminService;
+import com.masai.services.LoginLogoutCustomerService;
 import com.masai.services.OrderService;
 
 /**
  * @author tejas
  *
  */
-
-//{
-//	  "currentSessionId": 4,
-//	  "customerId": 1,
-//	  "key": "LMN1pJ",
-//	  "localDateTime": "2022-11-16T22:33:39.2100977"
-//	}
 
 @Service
 public class OrderServiceImplementation implements OrderService {
@@ -48,7 +46,10 @@ public class OrderServiceImplementation implements OrderService {
 	private OrderRepo orderRepo;
 
 	@Autowired
-	private LoginLogoutService loginLogoutServiceImplementation;
+	private LoginLogoutCustomerService loginLogoutCustomerServiceImplementation;
+
+	@Autowired
+	private LoginLogoutAdminService loginLogoutAdminServiceImplementation;
 
 	@Autowired
 	private CustomerRepo customerRepo;
@@ -56,11 +57,14 @@ public class OrderServiceImplementation implements OrderService {
 	@Autowired
 	private CartRepo cartRepo;
 
+	@Autowired
+	private ProductRepo productRepo;
+
 	@Override
 	public List<Order> viewAllOrdersbyUserId(User user, String key)
 			throws OrderException, UserException, LoginException, CustomerException {
 
-		User validate_user = loginLogoutServiceImplementation.validateUser(user, key);
+		User validate_user = loginLogoutCustomerServiceImplementation.authenticateCustomer(user, key);
 
 		if (validate_user != null) {
 
@@ -90,9 +94,9 @@ public class OrderServiceImplementation implements OrderService {
 	}
 
 	@Override
-	public String removeOrder(Integer orderId, String key) throws OrderException, LoginException, CustomerException {
+	public Order removeOrder(Integer orderId, String key) throws OrderException, LoginException, CustomerException {
 
-		Customer customer = loginLogoutServiceImplementation.validateCustomer(key);
+		Customer customer = loginLogoutCustomerServiceImplementation.validateCustomer(key);
 
 		if (customer != null) {
 
@@ -100,9 +104,31 @@ public class OrderServiceImplementation implements OrderService {
 
 			if (optional_order.isPresent()) {
 
-				orderRepo.deleteById(orderId);
+				Order order = optional_order.get();
 
-				return "Order Deleted Successfully !";
+				order.setOrderStatus("Cancelled");
+
+				List<ProductDTO> listofproducts = optional_order.get().getProductDtoList();
+
+				for (int i = 0; i < listofproducts.size(); i++) {
+
+					ProductDTO productDTO = listofproducts.get(i);
+
+					Integer deleted_quantity = productDTO.getQuantity();
+
+					Optional<Product> optional_product = productRepo.findById(productDTO.getProductId());
+
+					Product product = optional_product.get();
+
+					Integer database_quantity = product.getQuantity();
+
+					product.setQuantity(database_quantity + deleted_quantity);
+
+					productRepo.save(product);
+				}
+
+				return orderRepo.save(order);
+
 			} else {
 				throw new OrderException("No Orders Are Found With This Order_Id : " + orderId);
 			}
@@ -113,10 +139,12 @@ public class OrderServiceImplementation implements OrderService {
 	}
 
 	@Override
-	public List<Order> viewallOrdersByDate(String key, LocalDate date)
+	public List<Order> viewallOrdersByDate(String key, String stringdate)
 			throws OrderException, CustomerException, LoginException {
 
-		Customer customer = loginLogoutServiceImplementation.validateCustomer(key);
+		LocalDate date = LocalDate.parse(stringdate);
+
+		Customer customer = loginLogoutCustomerServiceImplementation.validateCustomer(key);
 
 		if (customer != null) {
 
@@ -137,11 +165,11 @@ public class OrderServiceImplementation implements OrderService {
 
 	@Override
 	public List<Order> viewAllOrdersByLocation(String key, String location)
-			throws OrderException, LoginException, CustomerException {
+			throws OrderException, LoginException, AdminException {
 
-		Customer customer = loginLogoutServiceImplementation.validateCustomer(key);
+		Admin admin = loginLogoutAdminServiceImplementation.validateAdmin(key);
 
-		if (customer != null) {
+		if (admin != null) {
 
 			List<Order> listOfOrdersByLocation = orderRepo.findBylocation(location);
 
@@ -154,18 +182,21 @@ public class OrderServiceImplementation implements OrderService {
 			}
 
 		} else {
-			throw new CustomerException("No Customer Found, Please Login In !");
+			throw new AdminException("No Customer Found, Please Login In !");
 		}
 	}
 
 	@Override
-	public Order addOrder(String key) throws LoginException, CustomerException, OrderException, CartException {
+	public Order addOrder(String key)
+			throws LoginException, CustomerException, OrderException, CartException, ProductException {
 
-		Customer customer = loginLogoutServiceImplementation.validateCustomer(key);
+		Customer customer = loginLogoutCustomerServiceImplementation.validateCustomer(key);
 
 		if (customer != null) {
 
 			Optional<Cart> optional_cart = cartRepo.findByCustomer(customer);
+
+			List<Order> listoforders = customer.getListOfOrders();
 
 			if (!optional_cart.isEmpty()) {
 
@@ -176,7 +207,7 @@ public class OrderServiceImplementation implements OrderService {
 				order.setCustomer(customer);
 				order.setAddress(customer.getAddress());
 				order.setLocation(customer.getAddress().getCity());
-				order.setOrderDate(LocalDateTime.now());
+				order.setOrderDate(LocalDate.now());
 				order.setOrderStatus("Order Confirmed");
 
 				List<ProductDTO> listofcartproducts = cart.getProducts();
@@ -187,19 +218,49 @@ public class OrderServiceImplementation implements OrderService {
 
 					List<ProductDTO> listoforderedproducts = new ArrayList<>();
 
-					for (ProductDTO p : listofcartproducts) {
+					for (int i = 0; i < listofcartproducts.size(); i++) {
 
-						listoforderedproducts.add(p);
+						ProductDTO cart_product = listofcartproducts.get(i);
 
-						Double price = p.getPrice() * p.getQuantity();
+						Optional<Product> optional_product = productRepo.findById(cart_product.getProductId());
 
-						totalprice = +price;
+						if (optional_product.isPresent()) {
+
+							Product product = optional_product.get();
+
+							Integer available_quantity = product.getQuantity();
+
+							if (available_quantity >= cart_product.getQuantity()) {
+
+								Double price = cart_product.getPrice() * cart_product.getQuantity();
+
+								totalprice = totalprice + price;
+
+								product.setQuantity(available_quantity - cart_product.getQuantity());
+
+								productRepo.save(product);
+
+								listoforderedproducts.add(cart_product);
+							} else {
+								throw new ProductException(
+										"Oops ! Available Quantity of Products : " + available_quantity);
+							}
+
+						} else {
+
+							throw new ProductException(
+									"No Product Found With This Product Id : " + cart_product.getProductId());
+						}
 
 					}
 
 					order.setTotal(totalprice);
 
 					order.setProductDtoList(listoforderedproducts);
+
+					listoforders.add(order);
+
+					customer.setListOfOrders(listoforders);
 
 					cart.setProducts(new ArrayList<>());
 
@@ -209,7 +270,7 @@ public class OrderServiceImplementation implements OrderService {
 
 				} else {
 
-					throw new OrderException("Cart is Empty, Please Add Products To Place a Order !");
+					throw new OrderException("Cart is Empty, Please Add Products To Place an Order !");
 				}
 
 			} else {
@@ -225,14 +286,16 @@ public class OrderServiceImplementation implements OrderService {
 	@Override
 	public List<Order> viewOrder(String key) throws LoginException, CustomerException, OrderException {
 
-		Customer customer = loginLogoutServiceImplementation.validateCustomer(key);
+		Customer customer = loginLogoutCustomerServiceImplementation.validateCustomer(key);
 
 		if (customer != null) {
 
 			List<Order> listOfOrders = customer.getListOfOrders();
 
 			if (!listOfOrders.isEmpty()) {
+
 				return listOfOrders;
+
 			} else {
 				throw new OrderException("No Orders Found For You !");
 			}

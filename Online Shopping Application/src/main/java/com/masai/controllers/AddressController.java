@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.masai.exceptions.AddressException;
+import com.masai.exceptions.AdminException;
 import com.masai.exceptions.CustomerException;
 import com.masai.exceptions.LoginException;
 import com.masai.model.Address;
 import com.masai.services.AddressService;
-import com.masai.servicesImplementation.AddressServiceImplementation;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
@@ -43,37 +43,37 @@ public class AddressController {
 
 		String result = addressService.addAddress(key, address);
 
-		return new ResponseEntity(result, HttpStatus.ACCEPTED);
+		return new ResponseEntity<String>(result, HttpStatus.ACCEPTED);
 	}
 
 	@PutMapping("/updateAddress")
 	public ResponseEntity<String> updateAddressHandler(@RequestParam String key, @RequestBody Address address)
 			throws CustomerException, LoginException {
 
-		String result = addressService.addAddress(key, address);
+		String result = addressService.updateAddress(key, address);
 
-		return new ResponseEntity(result, HttpStatus.ACCEPTED);
+		return new ResponseEntity<String>(result, HttpStatus.ACCEPTED);
 
 	}
 
 	@DeleteMapping("/deleteAddress")
 	public ResponseEntity<String> removeAddressHandler(@RequestParam String key, @RequestParam Integer addressId)
-			throws CustomerException, LoginException {
+			throws CustomerException, LoginException, AddressException {
 
 		String result = addressService.removeAddress(key, addressId);
 
-		return new ResponseEntity(result, HttpStatus.OK);
+		return new ResponseEntity<String>(result, HttpStatus.OK);
 
 	}
 
 	// Admin Role
 	@GetMapping("/allAddresses")
 	public ResponseEntity<List<Address>> viewAllAddressesHandler(@RequestParam String key)
-			throws CustomerException, LoginException, AddressException {
+			throws CustomerException, LoginException, AddressException, AdminException {
 
 		List<Address> listofaddresses = addressService.viewAllAddress(key);
 
-		return new ResponseEntity(listofaddresses, HttpStatus.OK);
+		return new ResponseEntity<List<Address>>(listofaddresses, HttpStatus.OK);
 
 	}
 
@@ -83,7 +83,7 @@ public class AddressController {
 
 		Address address = addressService.viewAddress(key);
 
-		return new ResponseEntity(address, HttpStatus.OK);
+		return new ResponseEntity<Address>(address, HttpStatus.OK);
 	}
 
 }

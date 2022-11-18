@@ -15,25 +15,25 @@ import lombok.NoArgsConstructor;
  * @author tejas
  *
  */
+
 @Entity
 @Data
 @NoArgsConstructor
-public class Address {
-
+public class Admin {
+	
+	//Id Should be a Contact Number
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer addressId;
+	private Integer AdminId;
+	
+	private String firstName;
 
-	private String streetNo;
+	private String lastName;
 
-	private String buildingName;
+	private String mobileNumber;
 
-	private String city;
-
-	private String state;
-
-	private String country;
-
-	private String pincode;
+	private String password;
+	
+	private String email;
 
 }

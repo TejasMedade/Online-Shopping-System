@@ -1,21 +1,16 @@
-	/**
- * 
- */
+/**
+* 
+*/
 package com.masai.controllers;
 
 import java.util.List;
-
-import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,9 +21,7 @@ import com.masai.exceptions.CustomerException;
 import com.masai.exceptions.LoginException;
 import com.masai.exceptions.ProductException;
 import com.masai.model.Cart;
-import com.masai.model.Product;
 import com.masai.services.CartService;
-import com.masai.servicesImplementation.CartServiceImplementation;
 
 /**
  * @author tejas
@@ -58,7 +51,7 @@ public class CartController {
 
 		String result = cartService.deleteallproducts(key);
 
-		return new ResponseEntity<>(result, HttpStatus.OK);
+		return new ResponseEntity<String>(result, HttpStatus.OK);
 	}
 
 	@GetMapping("/allProducts")
@@ -67,7 +60,7 @@ public class CartController {
 
 		List<ProductDTO> listOfProducts = cartService.viewallproducts(key);
 
-		return new ResponseEntity<>(listOfProducts, HttpStatus.OK);
+		return new ResponseEntity<List<ProductDTO>>(listOfProducts, HttpStatus.OK);
 
 	}
 
@@ -77,7 +70,7 @@ public class CartController {
 
 		Cart cart = cartService.deleteproduct(productId, key);
 
-		return new ResponseEntity<>(cart, HttpStatus.OK);
+		return new ResponseEntity<Cart>(cart, HttpStatus.OK);
 	}
 
 	@PutMapping("/updateProductQuantity")
@@ -86,7 +79,7 @@ public class CartController {
 
 		Cart cart = cartService.udpateproductquantity(key, productId, quantity);
 
-		return new ResponseEntity<>(cart, HttpStatus.OK);
+		return new ResponseEntity<Cart>(cart, HttpStatus.OK);
 	}
 
 }

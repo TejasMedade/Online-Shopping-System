@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.masai.model.Admin;
 import com.masai.model.Customer;
 
 /**
@@ -16,8 +17,8 @@ import com.masai.model.Customer;
  */
 
 @Repository
-public interface CustomerRepo extends JpaRepository<Customer, Integer> {
+public interface AdminRepo extends JpaRepository<Admin, Integer> {
 
-	public Optional<Customer> findByMobileNumber(String mobileNumber);
-
+	public Optional<Admin> findByMobileNumber(String mobileNumber);
+	
 }

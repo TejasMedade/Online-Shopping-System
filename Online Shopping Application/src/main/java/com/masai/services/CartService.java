@@ -5,15 +5,12 @@ package com.masai.services;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-
 import com.masai.dto.ProductDTO;
 import com.masai.exceptions.CartException;
 import com.masai.exceptions.CustomerException;
 import com.masai.exceptions.LoginException;
 import com.masai.exceptions.ProductException;
 import com.masai.model.Cart;
-import com.masai.model.Product;
 
 /**
  * @author tejas

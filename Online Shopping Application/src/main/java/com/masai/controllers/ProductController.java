@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.masai.exceptions.AdminException;
 import com.masai.exceptions.CustomerException;
 import com.masai.exceptions.LoginException;
 import com.masai.exceptions.ProductException;
@@ -39,27 +40,27 @@ public class ProductController {
 
 		List<Product> listofproducts = productService.viewallProducts();
 
-		return new ResponseEntity(listofproducts, HttpStatus.OK);
+		return new ResponseEntity<List<Product>>(listofproducts, HttpStatus.OK);
 	}
 
 	// Admin Role
 	@PostMapping("/addProduct")
 	public ResponseEntity<Product> addProductHandler(@RequestParam String key, @RequestBody Product product)
-			throws CustomerException, LoginException {
+			throws CustomerException, LoginException, AdminException {
 
 		Product added_product = productService.insertProduct(key, product);
 
-		return new ResponseEntity(added_product, HttpStatus.ACCEPTED);
+		return new ResponseEntity<Product>(added_product, HttpStatus.ACCEPTED);
 	}
 
 	// Admin Role
 	@PutMapping("/updateProduct")
 	public ResponseEntity<Product> updateProductHandler(@RequestParam String key, @RequestBody Product product)
-			throws CustomerException, LoginException, ProductException {
+			throws LoginException, ProductException, AdminException {
 
 		Product updated_product = productService.updateProduct(key, product);
 
-		return new ResponseEntity(updated_product, HttpStatus.ACCEPTED);
+		return new ResponseEntity<Product>(updated_product, HttpStatus.ACCEPTED);
 	}
 
 	@GetMapping("/viewProduct")
@@ -67,7 +68,7 @@ public class ProductController {
 
 		Product product = productService.viewProduct(productId);
 
-		return new ResponseEntity(product, HttpStatus.OK);
+		return new ResponseEntity<Product>(product, HttpStatus.OK);
 	}
 
 	@GetMapping("/viewProductByCategory")
@@ -76,18 +77,18 @@ public class ProductController {
 
 		List<Product> listofproducts = productService.viewProductByCategory(category_Name);
 
-		return new ResponseEntity(listofproducts, HttpStatus.OK);
+		return new ResponseEntity<List<Product>>(listofproducts, HttpStatus.OK);
 
 	}
 
 	// Admin Role
 	@GetMapping("/deleteProduct")
 	public ResponseEntity<String> removeProductHandler(@RequestParam String key, @RequestParam Integer product_Id)
-			throws CustomerException, LoginException, ProductException {
+			throws CustomerException, LoginException, ProductException, AdminException {
 
 		String result = productService.removeProduct(key, product_Id);
 
-		return new ResponseEntity(result, HttpStatus.OK);
+		return new ResponseEntity<String>(result, HttpStatus.OK);
 
 	}
 

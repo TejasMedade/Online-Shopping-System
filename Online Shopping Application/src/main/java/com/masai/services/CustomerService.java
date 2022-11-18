@@ -5,8 +5,7 @@ package com.masai.services;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-
+import com.masai.exceptions.AdminException;
 import com.masai.exceptions.CustomerException;
 import com.masai.exceptions.LoginException;
 import com.masai.model.Customer;
@@ -27,6 +26,6 @@ public interface CustomerService {
 	public Customer viewCustomer(String key, Integer customer_Id) throws CustomerException, LoginException;
 
 	// Check for Admin Role
-	public List<Customer> viewAllCustomers(String key) throws CustomerException, LoginException;
+	public List<Customer> viewAllCustomers(String key) throws AdminException, LoginException, CustomerException;
 
 }
