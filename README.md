@@ -161,6 +161,13 @@ Open the following URL for Swagger-UI
 http://localhost:8088/swagger-ui/
 ```
 
+## ER Diagram
+
+
+![Online Shopping Application(1)](https://user-images.githubusercontent.com/105907169/202779904-80050caf-b679-4b67-9afe-da67296fcb59.png)
+
+
+
 
 ## Demo
 
