@@ -13,6 +13,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import com.masai.dto.ProductDTO;
 
@@ -33,6 +36,9 @@ public class Cart {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer cartId;
 
+	@NotBlank
+	@NotEmpty
+	@NotNull
 	@OneToOne(cascade = CascadeType.ALL)
 	private Customer customer;
 
