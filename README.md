@@ -1,12 +1,4 @@
 # Online-Shopping-System
- 
-ADMIN PENDING
-README PENDING
-API FLOW PENDING
-ER DIAGRAM PENDING
-DEMO
-SCREENSHOTS
-API REFERNCE
 
 
 ![Logo](https://nimbus-screenshots.s3.amazonaws.com/s/91e455fba18e9a844446391993ef3a15.png)
