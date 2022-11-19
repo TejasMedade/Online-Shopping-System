@@ -224,11 +224,11 @@ Don't forget to give the project a star ! Thank You !
 
 ## Authors
 
-- [@Tejas Vilas Medade](https://github.com/tejasmedade)
+- [Tejas Vilas Medade](https://github.com/tejasmedade)
 ## Acknowledgements
 
 
-- [@Anand Singh Yadav](https://github.com/anandsinghyadav)
+- [Anand Singh Yadav](https://github.com/anandsinghyadav)
 
 - [Masai School](https://www.masaischool.com/)
  
