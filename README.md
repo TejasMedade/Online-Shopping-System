@@ -105,16 +105,16 @@ Open MySQL Server
 ```bash
 Create a New Database in SQL: "Online_Shopping_System" 
 ```
-Go to the Project Directory & Open SQL Folder > SQL Tables
-
-```bash
-Create The Same Tables in Your "Online_Shopping_System" Database 
-```
 
 Create a Admin For Your Database
 
 ```bash
-INSERT INTO ADMIN VALUES('Admin_01','Admin@01');
+INSERT INTO ADMIN VALUES('1001','admin_email','admin_first_name','admin_last_name','admin_mobile_number','admin_password');
+```
+
+Note for Admin & User
+```bash
+Admin Id : Min=1000, Max=1010 ; User Id : Enter Your Registered Mobile Number For Login, User Validation and Authentication. 
 ```
 
 
