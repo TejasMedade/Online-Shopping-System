@@ -101,7 +101,7 @@ Install MySQL Community Server
 https://dev.mysql.com/downloads/mysql/
 ```
 
-Clone the Project
+Clone the Repository
 
 ```bash
 git clone https://github.com/TejasMedade/Online-Shopping-System
