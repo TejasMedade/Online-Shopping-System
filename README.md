@@ -10,7 +10,7 @@
 
 The **Shopper's Club** has developed this REST API, which allows **Customers** to browse the **Products**, Save them to **Cart** for future, perform all the basic fundamental **CRUD** operations like any other Shopping Application and place **Orders** as per their requirements.
 
-The  **Shopper's Club** API also provides **User, Admin Validation & Authentication ** for every operation. 
+The **Shopper's Club** API also provides **User, Admin Validation & Authentication** for every operation and simplified Exception Handling for layman's easy understanding. 
 
 The API's primary objective is to provide **Customers with both a Simple & User-Friendly Shopping Experience.**
 
@@ -49,6 +49,7 @@ The API's Services  will be used by the **two** categories of users:
 - Cart Module 
 - Order Module
 - Address Module
+- Exception Handler Module
 
 
 ## System Structure
