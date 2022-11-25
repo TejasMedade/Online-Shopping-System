@@ -41,8 +41,14 @@ The API's Services  will be used by the **two** categories of users:
 - LOMBOK
 - SWAGGER UI
 
+## Modules
 
-
+- Admin Module
+- Customer Module
+- Product Module
+- Cart Module 
+- Order Module
+- Address Module
 
 
 ## System Structure
