@@ -226,6 +226,9 @@ Don't forget to give the project a star ! Thank You !
 ## Authors
 
 - [Tejas Vilas Medade](https://github.com/tejasmedade)
+
+- [Sumedh Ambhore](https://github.com/sumedh9561)
+
 ## Acknowledgements
 
 
