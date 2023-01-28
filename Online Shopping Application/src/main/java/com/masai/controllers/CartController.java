@@ -5,6 +5,8 @@ package com.masai.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,8 +38,9 @@ public class CartController {
 	private CartService cartService;
 
 	@PutMapping("/addProducts")
-	public ResponseEntity<Cart> addProductToCartHandler(@RequestParam Integer productId, @RequestParam String key,
-			@RequestParam Integer quantity) throws ProductException, LoginException, CustomerException, CartException {
+	public ResponseEntity<Cart> addProductToCartHandler(@Valid @RequestParam Integer productId,
+			@RequestParam String key, @RequestParam Integer quantity)
+			throws ProductException, LoginException, CustomerException, CartException {
 
 		Cart updatedCart = cartService.addproduct(productId, quantity, key);
 
@@ -65,8 +68,8 @@ public class CartController {
 	}
 
 	@DeleteMapping("/deleteProduct")
-	public ResponseEntity<Cart> deleteProductFromCartHandler(@RequestParam Integer productId, @RequestParam String key)
-			throws LoginException, CustomerException, CartException, ProductException {
+	public ResponseEntity<Cart> deleteProductFromCartHandler(@Valid @RequestParam Integer productId,
+			@RequestParam String key) throws LoginException, CustomerException, CartException, ProductException {
 
 		Cart cart = cartService.deleteproduct(productId, key);
 
@@ -74,8 +77,9 @@ public class CartController {
 	}
 
 	@PutMapping("/updateProductQuantity")
-	public ResponseEntity<Cart> udpateProductQuantityHandler(@RequestParam String key, @RequestParam Integer productId,
-			@RequestParam Integer quantity) throws CartException, LoginException, CustomerException, ProductException {
+	public ResponseEntity<Cart> udpateProductQuantityHandler(@RequestParam String key,
+			@Valid @RequestParam Integer productId, @RequestParam Integer quantity)
+			throws CartException, LoginException, CustomerException, ProductException {
 
 		Cart cart = cartService.udpateproductquantity(key, productId, quantity);
 
