@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,25 +29,20 @@ import lombok.NoArgsConstructor;
 public class CurrentCustomerSession {
 
 	@Id
-	@NotNull
-	@NotBlank
-	@NotEmpty
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer currentSessionId;
 
-	@NotNull
-	@NotBlank
-	@NotEmpty
+
+	@NotNull(message = "{CurrentCustomer.id.invalid}")
 	private Integer customerId;
 
-	@NotNull
-	@NotBlank
-	@NotEmpty
+	@NotNull(message = "{CurrentCustomer.key.invalid}")
+	@NotBlank(message = "{CurrentCustomer.key.invalid}")
+	@NotEmpty(message = "{CurrentCustomer.key.invalid}")
+	@Size(min = 6, max = 6, message = "{CurrentCustomer.key.invalid}")
 	private String key;
 
-	@NotNull
-	@NotBlank
-	@NotEmpty
+	@NotNull(message = "{CurrentCustomer.date.invalid}")
 	private LocalDateTime localDateTime;
 
 }
