@@ -54,7 +54,7 @@ public class LoginLogoutAdminServiceImplementation implements LoginLogoutAdminSe
 	}
 
 	@Override
-	public User authenticateAdmin(User user, String key) throws UserException, AdminException, LoginException {
+	public Admin authenticateAdmin(String userId, String userPassword, String key) throws UserException, AdminException, LoginException {
 
 		Optional<CurrentAdminSession> optional_currentAdminSession = currentAdminSessionRepo.findByKey(key);
 
@@ -62,15 +62,15 @@ public class LoginLogoutAdminServiceImplementation implements LoginLogoutAdminSe
 
 			CurrentAdminSession currentAdminSession = optional_currentAdminSession.get();
 
-			Optional<Admin> optional_admin = adminRepo.findById(currentAdminSession.getAdminId());
+			Optional<Admin> optional_admin = adminRepo.findByMobileNumber(userId);
 
 			if (optional_admin.isPresent()) {
 
 				Admin admin = optional_admin.get();
 
-				if (admin.getMobileNumber().equals(user.getId()) && admin.getPassword().equals(user.getPassword())) {
+				if (admin.getMobileNumber().equals(userId) && admin.getPassword().equals(userPassword)) {
 
-					return user;
+					return admin;
 				} else {
 					throw new UserException("Invalid UserId or Password");
 				}
