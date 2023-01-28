@@ -12,9 +12,11 @@ import org.springframework.stereotype.Service;
 import com.masai.exceptions.AdminException;
 import com.masai.exceptions.CustomerException;
 import com.masai.exceptions.LoginException;
+import com.masai.exceptions.UserException;
 import com.masai.model.Admin;
 import com.masai.model.Cart;
 import com.masai.model.Customer;
+import com.masai.model.User;
 import com.masai.repository.CartRepo;
 import com.masai.repository.CustomerRepo;
 import com.masai.services.CustomerService;
@@ -74,18 +76,26 @@ public class CustomerServiceImplementation implements CustomerService {
 	}
 
 	@Override
-	public String removeCustomer(String key, Integer customer_Id) throws CustomerException, LoginException {
+	public String removeCustomer(String key, User user) throws CustomerException, LoginException, UserException {
 
-		Customer validate_customer = loginLogoutCustomerServiceimplementation.validateCustomer(key);
+		User validate_user = loginLogoutCustomerServiceimplementation.authenticateCustomer(user, key);
 
-		if (validate_customer != null) {
+		if (validate_user != null) {
 
-			customerRepo.deleteById(customer_Id);
+			Optional<Customer> optionalcustomer = customerRepo.findByMobileNumber(user.getId());
 
-			return "Customer Deleted Successfully !";
+			if (optionalcustomer.isPresent()) {
+
+				customerRepo.delete(optionalcustomer.get());
+
+				return "Customer Deleted Successfully !";
+
+			} else {
+				throw new CustomerException("No Registered Customer Found With This Mobile Number : " + user.getId());
+			}
 
 		} else {
-			throw new CustomerException("Invalid Key, Please Login In !");
+			throw new CustomerException("Invalid Login Id or Password !");
 		}
 
 	}
