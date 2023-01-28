@@ -5,6 +5,8 @@ package com.masai.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,8 +25,6 @@ import com.masai.exceptions.CustomerException;
 import com.masai.exceptions.LoginException;
 import com.masai.model.Address;
 import com.masai.services.AddressService;
-
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 /**
  * @author tejas
@@ -38,8 +39,8 @@ public class AddressController {
 	private AddressService addressService;
 
 	@PostMapping("/addAddress")
-	public ResponseEntity<String> addAddressHandler(@RequestParam String key, @RequestBody Address address)
-			throws CustomerException, LoginException {
+	public ResponseEntity<String> addAddressHandler(@Valid @RequestParam String key,
+			@Valid @RequestBody Address address) throws CustomerException, LoginException {
 
 		String result = addressService.addAddress(key, address);
 
@@ -47,7 +48,7 @@ public class AddressController {
 	}
 
 	@PutMapping("/updateAddress")
-	public ResponseEntity<String> updateAddressHandler(@RequestParam String key, @RequestBody Address address)
+	public ResponseEntity<String> updateAddressHandler(@RequestParam String key, @Valid @RequestBody Address address)
 			throws CustomerException, LoginException {
 
 		String result = addressService.updateAddress(key, address);
@@ -57,10 +58,10 @@ public class AddressController {
 	}
 
 	@DeleteMapping("/deleteAddress")
-	public ResponseEntity<String> removeAddressHandler(@RequestParam String key, @RequestParam Integer addressId)
+	public ResponseEntity<String> removeAddressHandler(@RequestParam String key)
 			throws CustomerException, LoginException, AddressException {
 
-		String result = addressService.removeAddress(key, addressId);
+		String result = addressService.removeAddress(key);
 
 		return new ResponseEntity<String>(result, HttpStatus.OK);
 
