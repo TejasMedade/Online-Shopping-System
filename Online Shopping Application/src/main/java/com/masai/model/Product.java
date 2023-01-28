@@ -3,7 +3,6 @@
  */
 package com.masai.model;
 
-
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,9 +26,6 @@ import lombok.NoArgsConstructor;
 public class Product {
 
 	@Id
-	@NotBlank
-	@NotEmpty
-	@NotNull
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer productId;
 
@@ -38,15 +34,13 @@ public class Product {
 	@NotNull(message = "{Product.name.invalid}")
 	private String productName;
 
-	@NotBlank(message = "{Product.price.invalid}")
-	@NotEmpty(message = "{Product.price.invalid}")
 	@NotNull(message = "{Product.price.invalid}")
 	private Double price;
-	
+
 	private String colour;
-	
+
 	private String dimension;
-	
+
 	@NotBlank(message = "{Product.specification.invalid}")
 	@NotEmpty(message = "{Product.specification.invalid}")
 	@NotNull(message = "{Product.specification.invalid}")
@@ -56,15 +50,10 @@ public class Product {
 	@NotEmpty(message = "{Product.manufacturer.invalid}")
 	@NotNull(message = "{Product.manufacturer.invalid}")
 	private String manufacturer;
-	
-	@NotBlank(message = "{Product.category.invalid}")
-	@NotEmpty(message = "{Product.category.invalid}")
-	@NotNull(message = "{Product.category.invalid}")
+
 	@Embedded
 	private Category category;
 
-	@NotBlank(message = "{Product.quantity.invalid}")
-	@NotEmpty(message = "{Product.quantity.invalid}")
 	@NotNull(message = "{Product.quantity.invalid}")
 	private Integer quantity;
 
