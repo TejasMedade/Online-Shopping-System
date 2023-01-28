@@ -75,14 +75,13 @@ public class AddressServiceImplementation implements AddressService {
 	}
 
 	@Override
-	public String removeAddress(String key, Integer addressId)
-			throws CustomerException, LoginException, AddressException {
+	public String removeAddress(String key) throws CustomerException, LoginException, AddressException {
 
 		Customer customer = loginLogoutCustomerServiceImplementation.validateCustomer(key);
 
 		if (customer != null) {
 
-			Optional<Address> optional_address = addressRepo.findById(addressId);
+			Optional<Address> optional_address = addressRepo.findById(customer.getAddress().getAddressId());
 
 			if (optional_address.isPresent()) {
 
@@ -91,7 +90,8 @@ public class AddressServiceImplementation implements AddressService {
 				return "Address Deleted Successfully !";
 
 			} else {
-				throw new AddressException("No Address Found With The Address ID : " + addressId);
+				throw new AddressException(
+						"No Address Found With The Address ID : " + customer.getAddress().getAddressId());
 			}
 
 		} else {
@@ -116,7 +116,7 @@ public class AddressServiceImplementation implements AddressService {
 			}
 
 		} else {
-			throw new AdminException("Invalid Key, Please Login In as Admin !");
+			throw new AdminException("Invalid Admin Key, Please Login In as Admin !");
 		}
 
 	}
