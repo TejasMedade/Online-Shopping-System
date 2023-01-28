@@ -3,11 +3,14 @@
  */
 package com.masai.controllers;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,8 +24,6 @@ import com.masai.model.CurrentAdminSession;
 import com.masai.model.User;
 import com.masai.services.LoginLogoutAdminService;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-
 /**
  * @author tejas
  *
@@ -35,8 +36,8 @@ public class LoginLogoutAdminController {
 	@Autowired
 	private LoginLogoutAdminService loginLogoutAdminService;
 
-	@GetMapping("/login")
-	public ResponseEntity<CurrentAdminSession> loginAdminHandler(@RequestBody User user)
+	@PostMapping("/login")
+	public ResponseEntity<CurrentAdminSession> loginAdminHandler(@Valid @RequestBody User user)
 			throws LoginException, AdminException {
 
 		CurrentAdminSession currentAdminSession = loginLogoutAdminService.loginAdmin(user);
@@ -53,13 +54,13 @@ public class LoginLogoutAdminController {
 
 	}
 
-	@GetMapping("/authenticate")
-	public ResponseEntity<User> authenticateAdminHandler(@RequestBody User user, @RequestParam String key)
+	@PostMapping("/authenticate")
+	public ResponseEntity<Admin> authenticateAdminHandler(@Valid @RequestParam String userId,@Valid @RequestParam String userPassword , @RequestParam String key)
 			throws UserException, AdminException, LoginException {
 
-		User validated_admin = loginLogoutAdminService.authenticateAdmin(user, key);
+		Admin validated_admin = loginLogoutAdminService.authenticateAdmin(userId,userPassword,key);
 
-		return new ResponseEntity<User>(validated_admin, HttpStatus.OK);
+		return new ResponseEntity<Admin>(validated_admin, HttpStatus.OK);
 	}
 
 	@GetMapping("/validate")
