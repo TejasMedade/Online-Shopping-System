@@ -34,14 +34,9 @@ import lombok.NoArgsConstructor;
 public class Order {
 
 	@Id
-	@NotBlank
-	@NotEmpty
-	@NotNull
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer orderId;
 
-	@NotBlank(message = "{Order.date.invalid}")
-	@NotEmpty(message = "{Order.date.invalid}")
 	@NotNull(message = "{Order.date.invalid}")
 	private LocalDate orderDate;
 
@@ -55,27 +50,16 @@ public class Order {
 	@NotNull(message = "{Order.location.invalid}")
 	private String location;
 
-	@NotBlank(message = "{Order.customer.invalid}")
-	@NotEmpty(message = "{Order.customer.invalid}")
-	@NotNull(message = "{Order.customer.invalid}")
 	@ManyToOne(cascade = CascadeType.ALL)
 	private Customer customer;
 
-	@NotBlank(message = "{Order.product.invalid}")
-	@NotEmpty(message = "{Order.product.invalid}")
-	@NotNull(message = "{Order.product.invalid}")
 	@ElementCollection
 	private List<ProductDTO> productDtoList = new ArrayList<>();
 
-	@NotBlank(message = "{Order.total.invalid}")
-	@NotEmpty(message = "{Order.total.invalid}")
 	@NotNull(message = "{Order.total.invalid}")
 	private Double total;
 
-	@NotBlank(message = "{Order.address.invalid}")
-	@NotEmpty(message = "{Order.address.invalid}")
-	@NotNull(message = "{Order.address.invalid}")
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private Address address;
 
 }
