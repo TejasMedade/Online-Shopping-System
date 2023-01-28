@@ -10,16 +10,10 @@ import org.springframework.stereotype.Service;
 
 import com.masai.exceptions.AdminException;
 import com.masai.exceptions.CurrentAdminSessionException;
-import com.masai.exceptions.CurrentCustomerSessionException;
-import com.masai.exceptions.CustomerException;
 import com.masai.model.Admin;
 import com.masai.model.CurrentAdminSession;
-import com.masai.model.CurrentCustomerSession;
-import com.masai.model.Customer;
 import com.masai.repository.AdminRepo;
 import com.masai.repository.CurrentAdminSessionRepo;
-import com.masai.repository.CurrentCustomerSessionRepo;
-import com.masai.repository.CustomerRepo;
 import com.masai.services.CurrentAdminSessionService;
 
 /**
