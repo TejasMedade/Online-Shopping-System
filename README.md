@@ -8,17 +8,39 @@
 
  **REST API SERVICE**
 
-The **Shopper's Club** has developed this REST API, which allows **Customers** to browse the **Products**, Save them to **Cart** for future, perform all the basic fundamental **CRUD** operations like any other Shopping Application and place **Orders** as per their requirements.
+The Shopper's Club API is an easy-to-use REST API solution for online shopping. It allows customers to browse and purchase products with a simple and user-friendly interface. 
 
-The **Shopper's Club** API also provides **User, Admin Validation & Authentication** for every operation and simplified Exception Handling for layman's easy understanding. 
+The API provides functionalities for:
 
-The API's primary objective is to provide **Customers with both a Simple & User-Friendly Shopping Experience.**
+ - Browsing products and saving them to a cart for future purchase
+ - CRUD operations for managing products and orders
+ - User and admin validation and authentication for secure transactions
+ - Simplified exception handling for an easy understanding of errors.
+ - Our primary goal is to provide customers with a seamless shopping experience. With this API, customers can easily find and purchase products without any hassle.
+ -  The API also provides user and admin validation and authentication for secure transactions. Exception handling is also simplified for easy understanding.
+
+We invite developers to contribute to this project and help us improve the shopping experience for customers. Join our community and take part in the development of the most user-friendly and efficient e-commerce solution.
 
 The API's Services  will be used by the **two** categories of users:
 
 - **Admin (Administrator)**
 
 - **User (Customer)** 
+
+## Features
+
+ - **Authentication and Authorization:** Implementing user and admin validation and authentication for secure transactions, using JWT token-based authentication.
+
+- **CRUD operations:** Enabling CRUD operations for managing products and orders, including adding, updating, viewing, and deleting products and customer - accounts.
+- **Product browsing and cart management:** Allowing customers to browse products and save them to a cart for future purchase, as well as updating and deleting products from the cart.
+- **Order management:** Enabling customers to place, view, and cancel orders with filtering options, and for administrators to view all orders and customers.
+- **Database management:** Providing functionality for administrators to manage the database, including adding, updating, and deleting products and administrators.
+- **Exception handling:** Implementing simplified exception handling for easy understanding of errors.
+- **Search and Filtering:** Search and filter functionality for orders, customers and products for ease of use.
+- **Pagination:** Pagination feature allows to navigate through large amount of data easily
+- **Data Transfer Objects:** Custom Request and Response Data Transfer Objects for all HTTP Requests to improve the overall performance of the API.
+- **User-Friendly Experience:** The primary objective of the API is to provide a simple and user-friendly experience for customers and administrators.
+
 ## Tech Stack
 
 - JAVA
