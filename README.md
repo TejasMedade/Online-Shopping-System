@@ -37,16 +37,6 @@ The primary goal of the Shopper's Club API is to provide customers with a seamle
 - LOMBOK
 - SWAGGER UI
 
-## Modules
-
-- Admin Module
-- Customer Module
-- Product Module
-- Cart Module 
-- Order Module
-- Address Module
-- Exception Handler Module
-
 
 
 ## Features
