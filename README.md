@@ -4,9 +4,7 @@
 ![Logo](https://nimbus-screenshots.s3.amazonaws.com/s/91e455fba18e9a844446391993ef3a15.png)
 
 
-# Online Shopping System
-
- **REST API SERVICE**
+## WEB SERVICE : REST A.P.I
 
 The Shopper's Club API is a robust and reliable RESTful solution for online e-commerce platforms. It allows customers to browse and purchase products with a seamless and user-friendly interface. The API is designed to provide a wide range of functionalities for managing products, orders, and customer information.
 
@@ -16,26 +14,6 @@ Security is a top priority for the Shopper's Club API, and it includes user and 
 
 The primary goal of the Shopper's Club API is to provide customers with a seamless shopping experience. With this API, customers can easily find and purchase products without any hassle, making it an ideal solution for e-commerce platforms looking to improve their customer experience.
 
-
-The API's Services  will be used by the **two** categories of users:
-
-- **Admin (Administrator)**
-
-- **User (Customer)** 
-
-## Features
-
- - **Authentication and Authorization:** Implementing user and admin validation and authentication for secure transactions, using JWT token-based authentication.
-
-- **CRUD operations:** Enabling CRUD operations for managing products and orders, including adding, updating, viewing, and deleting products and customer - accounts.
-- **Product browsing and cart management:** Allowing customers to browse products and save them to a cart for future purchase, as well as updating and deleting products from the cart.
-- **Order management:** Enabling customers to place, view, and cancel orders with filtering options, and for administrators to view all orders and customers.
-- **Database management:** Providing functionality for administrators to manage the database, including adding, updating, and deleting products and administrators.
-- **Exception handling:** Implementing simplified exception handling for easy understanding of errors.
-- **Search and Filtering:** Search and filter functionality for orders, customers and products for ease of use.
-- **Pagination:** Pagination feature allows to navigate through large amount of data easily
-- **Data Transfer Objects:** Custom Request and Response Data Transfer Objects for all HTTP Requests to improve the overall performance of the API.
-- **User-Friendly Experience:** The primary objective of the API is to provide a simple and user-friendly experience for customers and administrators.
 
 ## Tech Stack
 
@@ -70,33 +48,47 @@ The API's Services  will be used by the **two** categories of users:
 - Exception Handler Module
 
 
-## System Structure
 
-- Administrator
-    -
-    - Login & Logout
-    - View all Products
-    - View all Orders of an User
-    - View all Customers
-    - Add New Products into Database
-    - Remove Products from Database
-    - Update Products in Database 
-    - Delete Admin from Database
+## Features
 
-- User / Customer
-    -
-    - Signup 
-    - Login & Logout
-    - Update all Personal Details and Address 
-    - View all Products with filtering options
-    - Add Products to Cart
-    - Update Products Quantity in Cart 
-    - Delete Products from Cart
-    - Empty Cart
-    - Add Order
-    - Cancel Order
-    - View Orders with filtering options
-    - Delete Customer Account
+ - **Authentication and Authorization:** Implementing user and admin validation and authentication for secure transactions, using JWT token-based authentication.
+
+- **CRUD operations:** Enabling CRUD operations for managing products and orders, including adding, updating, viewing, and deleting products and customer - accounts.
+- **Product browsing and cart management:** Allowing customers to browse products and save them to a cart for future purchase, as well as updating and deleting products from the cart.
+- **Order management:** Enabling customers to place, view, and cancel orders with filtering options, and for administrators to view all orders and customers.
+- **Database management:** Providing functionality for administrators to manage the database, including adding, updating, and deleting products and administrators.
+- **Exception handling:** Implementing simplified exception handling for easy understanding of errors.
+- **Search and Filtering:** Search and filter functionality for orders, customers and products for ease of use.
+- **Pagination:** Pagination feature allows to navigate through large amount of data easily
+- **Data Transfer Objects:** Custom Request and Response Data Transfer Objects for all HTTP Requests to improve the overall performance of the API.
+- **User-Friendly Experience:** The primary objective of the API is to provide a simple and user-friendly experience for customers and administrators.
+
+
+## Administrator Functionalities
+    
+   - Login & Logout
+   - View all Products
+   - View all Orders of an User
+   -  View all Customers
+   -  Add New Products into Database
+   -  Remove Products from Database
+   -  Update Products in Database 
+   -  Delete Admin from Database
+
+## Customer Functionalities
+    
+  - Signup 
+   -  Login & Logout
+   -  Update all Personal Details and Address 
+   -  View all Products with filtering options
+   -  Add Products to Cart
+   -  Update Products Quantity in Cart 
+   -  Delete Products from Cart
+   -  Empty Cart
+   -  Add Order
+   -  Cancel Order
+   -  View Orders with filtering options
+   -  Delete Customer Account
     
 
 
