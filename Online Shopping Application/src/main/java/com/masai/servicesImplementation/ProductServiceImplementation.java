@@ -10,11 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.masai.exceptions.AdminException;
-import com.masai.exceptions.CustomerException;
 import com.masai.exceptions.LoginException;
 import com.masai.exceptions.ProductException;
+import com.masai.exceptions.UserException;
 import com.masai.model.Admin;
-import com.masai.model.Customer;
 import com.masai.model.Product;
 import com.masai.repository.ProductRepo;
 import com.masai.services.LoginLogoutAdminService;
@@ -78,15 +77,17 @@ public class ProductServiceImplementation implements ProductService {
 	}
 
 	@Override
-	public Product insertProduct(String key, Product product) throws LoginException, AdminException {
+	public Product insertProduct(String userId, String userPassword, String key, Product product)
+			throws LoginException, AdminException, UserException {
 
-		Admin admin = loginLogoutAdminServiceImplementation.validateAdmin(key);
+		Admin validated_admin = loginLogoutAdminServiceImplementation.authenticateAdmin(userId, userPassword, key);
 
-		if (admin != null) {
+		if (validated_admin != null) {
 
 			Product added_product = productRepo.save(product);
 
 			return added_product;
+
 		} else {
 			throw new AdminException("Invalid Admin Key, Please Login In as Admin!");
 		}
@@ -94,11 +95,12 @@ public class ProductServiceImplementation implements ProductService {
 	}
 
 	@Override
-	public Product updateProduct(String key, Product product) throws AdminException, LoginException, ProductException {
+	public Product updateProduct(String userId, String userPassword, String key, Product product)
+			throws AdminException, LoginException, ProductException, UserException {
 
-		Admin admin = loginLogoutAdminServiceImplementation.validateAdmin(key);
+		Admin validated_admin = loginLogoutAdminServiceImplementation.authenticateAdmin(userId, userPassword, key);
 
-		if (admin != null) {
+		if (validated_admin != null) {
 
 			Optional<Product> optional_product = productRepo.findById(product.getProductId());
 
@@ -110,18 +112,18 @@ public class ProductServiceImplementation implements ProductService {
 				throw new ProductException("Invalid Product Id, No Product Found !");
 			}
 		} else {
-			throw new AdminException("Invalid Admin Key, Please Login In as Admin!");
+			throw new AdminException("Invalid Admin Key, Please Login In as Admin !");
 		}
 
 	}
 
 	@Override
-	public String removeProduct(String key, Integer product_Id)
-			throws AdminException, LoginException, ProductException {
+	public String removeProduct(String userId, String userPassword, String key, Integer product_Id)
+			throws AdminException, LoginException, ProductException, UserException {
 
-		Admin admin = loginLogoutAdminServiceImplementation.validateAdmin(key);
+		Admin validated_admin = loginLogoutAdminServiceImplementation.authenticateAdmin(userId, userPassword, key);
 
-		if (admin != null) {
+		if (validated_admin != null) {
 
 			Optional<Product> optional_product = productRepo.findById(product_Id);
 
