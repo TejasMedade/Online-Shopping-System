@@ -55,34 +55,46 @@ The primary goal of the Shopper's Club API is to provide customers with a seamle
 
 
 ## Administrator Functionalities
-    
-   - Login & Logout
-   - View all Products
-   - View all Orders of an User
-   -  View all Customers
-   -  Add New Products into Database
-   -  Remove Products from Database
-   -  Update Products in Database 
-   -  Delete Admin from Database
+
+- **Administrator Management**
+  - Endpoint for user authentication and management of login and logout sessions
+  - Endpoint for deleting admin & users from the database
+
+- **Product Management**
+  - Endpoint for adding new products to the database
+  - Endpoint for removing products from the database
+  - Endpoint for updating existing products in the database
+  - Endpoint for retrieving all products from the database
+
+- **Customer Management**
+
+  - Endpoint for retrieving all customers from the database
+
 
 ## Customer Functionalities
     
-  - Signup 
-   -  Login & Logout
-   -  Update all Personal Details and Address 
-   -  View all Products with filtering options
-   -  Add Products to Cart
-   -  Update Products Quantity in Cart 
-   -  Delete Products from Cart
-   -  Empty Cart
-   -  Add Order
-   -  Cancel Order
-   -  View Orders with filtering options
-   -  Delete Customer Account
-    
+- **Customer Management**
+  - Endpoint for user login and logout
+  - Endpoint for deleting a user account
+  - Endpoint for updating personal and address information
+
+- **Product Management**
+
+  - Endpoint for browsing and filtering products
+
+- **Cart Management**
+  - Endpoint for adding products to a cart
+  - Endpoint for updating product quantities in a cart
+  - Endpoint for removing products from a cart
+  - Endpoint for emptying a cart
 
 
+- **Order Management**
+  - Endpoint for placing an order
+  - Endpoint for canceling an order
+  - Endpoint for browsing and filtering orders
 
+  
 
 ## Setting & Installation 
 
