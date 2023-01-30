@@ -4,7 +4,6 @@
 package com.masai.servicesImplementation;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -61,14 +60,14 @@ public class OrderServiceImplementation implements OrderService {
 	private ProductRepo productRepo;
 
 	@Override
-	public List<Order> viewAllOrdersbyUserId(User user, String key)
-			throws OrderException, UserException, LoginException, CustomerException {
+	public List<Order> viewAllOrdersbyUserId(String userId, String userPassword, String userid, String key)
+			throws OrderException, UserException, LoginException, CustomerException, AdminException {
 
-		User validate_user = loginLogoutCustomerServiceImplementation.authenticateCustomer(user, key);
+		Admin validate_admin = loginLogoutAdminServiceImplementation.authenticateAdmin( userId,  userPassword, key);
 
-		if (validate_user != null) {
+		if (validate_admin != null) {
 
-			Optional<Customer> optional_customer = customerRepo.findByMobileNumber(user.getId());
+			Optional<Customer> optional_customer = customerRepo.findByMobileNumber(userid);
 
 			if (optional_customer.isPresent()) {
 
@@ -81,10 +80,10 @@ public class OrderServiceImplementation implements OrderService {
 					return listoforders;
 
 				} else {
-					throw new OrderException("No Orders Are Been Placed With The Customer_Id : " + user.getId());
+					throw new OrderException("No Orders Are Been Placed With The Customer_Id : " + userId);
 				}
 			} else {
-				throw new CustomerException("No Customer Registered With The User Id : " + user.getId());
+				throw new CustomerException("No Customer Registered With The User Id : " + userId);
 			}
 
 		} else {
@@ -94,43 +93,53 @@ public class OrderServiceImplementation implements OrderService {
 	}
 
 	@Override
-	public Order removeOrder(Integer orderId, String key) throws OrderException, LoginException, CustomerException {
+	public Order removeOrder(Integer orderId, String key, User user)
+			throws OrderException, LoginException, CustomerException, UserException {
 
-		Customer customer = loginLogoutCustomerServiceImplementation.validateCustomer(key);
+		User validate_user = loginLogoutCustomerServiceImplementation.authenticateCustomer(user, key);
 
-		if (customer != null) {
+		if (validate_user != null) {
 
-			Optional<Order> optional_order = orderRepo.findById(orderId);
+			Optional<Customer> optionalcustomer = customerRepo.findByMobileNumber(user.getId());
 
-			if (optional_order.isPresent()) {
+			if (optionalcustomer.isPresent()) {
 
-				Order order = optional_order.get();
+				Optional<Order> optional_order = orderRepo.findById(orderId);
 
-				order.setOrderStatus("Cancelled");
+				if (optional_order.isPresent()) {
 
-				List<ProductDTO> listofproducts = optional_order.get().getProductDtoList();
+					Order order = optional_order.get();
 
-				for (int i = 0; i < listofproducts.size(); i++) {
+					order.setOrderStatus("Cancelled");
 
-					ProductDTO productDTO = listofproducts.get(i);
+					List<ProductDTO> listofproducts = optional_order.get().getProductDtoList();
 
-					Integer deleted_quantity = productDTO.getQuantity();
+					for (int i = 0; i < listofproducts.size(); i++) {
 
-					Optional<Product> optional_product = productRepo.findById(productDTO.getProductId());
+						ProductDTO productDTO = listofproducts.get(i);
 
-					Product product = optional_product.get();
+						Integer deleted_quantity = productDTO.getQuantity();
 
-					Integer database_quantity = product.getQuantity();
+						Optional<Product> optional_product = productRepo.findById(productDTO.getProductId());
 
-					product.setQuantity(database_quantity + deleted_quantity);
+						Product product = optional_product.get();
 
-					productRepo.save(product);
+						Integer database_quantity = product.getQuantity();
+
+						product.setQuantity(database_quantity + deleted_quantity);
+
+						productRepo.save(product);
+					}
+
+					return orderRepo.save(order);
+
+				} else {
+					throw new OrderException("No Orders Are Found With This Order_Id : " + orderId);
 				}
+			}
 
-				return orderRepo.save(order);
-
-			} else {
-				throw new OrderException("No Orders Are Found With This Order_Id : " + orderId);
+			else {
+				throw new CustomerException("No Customer Registered With The User Id : " + user.getId());
 			}
 
 		} else {
@@ -164,12 +173,12 @@ public class OrderServiceImplementation implements OrderService {
 	}
 
 	@Override
-	public List<Order> viewAllOrdersByLocation(String key, String location)
-			throws OrderException, LoginException, AdminException {
+	public List<Order> viewAllOrdersByLocation(String userId,String userPassword,String key, String location)
+			throws OrderException, LoginException, AdminException, UserException {
 
-		Admin admin = loginLogoutAdminServiceImplementation.validateAdmin(key);
+		Admin validate_admin = loginLogoutAdminServiceImplementation.authenticateAdmin(userId,userPassword,key);
 
-		if (admin != null) {
+		if (validate_admin != null) {
 
 			List<Order> listOfOrdersByLocation = orderRepo.findBylocation(location);
 
@@ -182,8 +191,9 @@ public class OrderServiceImplementation implements OrderService {
 			}
 
 		} else {
-			throw new AdminException("No Customer Found, Please Login In !");
+			throw new AdminException("No Admin Found, Please Login In as Admin!");
 		}
+
 	}
 
 	@Override
