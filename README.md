@@ -4,7 +4,7 @@
 ![Logo](https://nimbus-screenshots.s3.amazonaws.com/s/91e455fba18e9a844446391993ef3a15.png)
 
 
-## WEB SERVICE : REST A.P.I
+## WEB SERVICE : REST A.P.I.
 
 The Shopper's Club API is a robust and reliable RESTful solution for online e-commerce platforms. It allows customers to browse and purchase products with a seamless and user-friendly interface. The API is designed to provide a wide range of functionalities for managing products, orders, and customer information.
 
