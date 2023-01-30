@@ -9,7 +9,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.masai.exceptions.CurrentCustomerSessionException;
 import com.masai.exceptions.CustomerException;
 import com.masai.exceptions.LoginException;
 import com.masai.exceptions.LogoutException;
@@ -19,7 +18,6 @@ import com.masai.model.Customer;
 import com.masai.model.User;
 import com.masai.repository.CurrentCustomerSessionRepo;
 import com.masai.repository.CustomerRepo;
-import com.masai.services.CurrentCustomerSessionService;
 import com.masai.services.LoginLogoutCustomerService;
 
 import net.bytebuddy.utility.RandomString;
