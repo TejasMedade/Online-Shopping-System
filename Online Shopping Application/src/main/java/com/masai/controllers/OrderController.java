@@ -5,12 +5,15 @@ package com.masai.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,8 +28,6 @@ import com.masai.exceptions.UserException;
 import com.masai.model.Order;
 import com.masai.model.User;
 import com.masai.services.OrderService;
-
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 /**
  * @author tejas
@@ -50,10 +51,10 @@ public class OrderController {
 	}
 
 	@DeleteMapping("/deleteOrder")
-	public ResponseEntity<Order> removeOrderHandler(@RequestParam Integer order_Id, @RequestParam String key)
-			throws OrderException, LoginException, CustomerException {
+	public ResponseEntity<Order> removeOrderHandler(@Valid @RequestParam Integer order_Id, @RequestParam String key,
+			@Valid @RequestBody User user) throws OrderException, LoginException, CustomerException, UserException {
 
-		Order order = orderService.removeOrder(order_Id, key);
+		Order order = orderService.removeOrder(order_Id, key, user);
 
 		return new ResponseEntity<Order>(order, HttpStatus.OK);
 
@@ -70,7 +71,7 @@ public class OrderController {
 
 	@PostMapping("/allOrders")
 	public ResponseEntity<List<Order>> viewallOrdersByDateHandler(@RequestParam String key,
-			@RequestParam String stringdate) throws OrderException, CustomerException, LoginException {
+			@Valid @RequestParam String stringdate) throws OrderException, CustomerException, LoginException {
 
 		// Please Make Sure Date should be in this format "YYYY-MM-DD"
 
@@ -80,21 +81,23 @@ public class OrderController {
 
 	}
 
-	@GetMapping("/viewLocationOrders")
+	@PostMapping("/viewLocationOrders")
 	public ResponseEntity<List<Order>> viewAllOrdersByLocationHandler(@RequestParam String key,
-			@RequestParam String location) throws OrderException, LoginException, CustomerException, AdminException {
+			@Valid @RequestParam String location, @Valid @RequestParam String userId,@Valid @RequestParam String userPassword )
+			throws OrderException, LoginException, CustomerException, AdminException, UserException {
 
-		List<Order> listoforders = orderService.viewAllOrdersByLocation(key, location);
+		List<Order> listoforders = orderService.viewAllOrdersByLocation(key, location, userId,userPassword);
 
 		return new ResponseEntity<List<Order>>(listoforders, HttpStatus.OK);
 
 	}
 
-	@GetMapping("/viewUserOrder")
-	public ResponseEntity<List<Order>> viewAllOrdersbyUserIdHandler(@RequestBody User user, @RequestParam String key)
-			throws OrderException, UserException, LoginException, CustomerException {
+	@PostMapping("/viewUserOrder")
+	public ResponseEntity<List<Order>> viewAllOrdersbyUserIdHandler(@RequestParam String key,
+			@Valid @RequestParam String userId,@Valid @RequestParam String userPassword , @Valid @RequestParam String customer_userId)
+			throws OrderException, UserException, LoginException, CustomerException, AdminException {
 
-		List<Order> listoforders = orderService.viewAllOrdersbyUserId(user, key);
+		List<Order> listoforders = orderService.viewAllOrdersbyUserId(userId,userPassword, key, customer_userId);
 
 		return new ResponseEntity<List<Order>>(listoforders, HttpStatus.OK);
 
