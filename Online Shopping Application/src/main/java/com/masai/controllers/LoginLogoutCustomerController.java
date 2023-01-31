@@ -3,11 +3,14 @@
  */
 package com.masai.controllers;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,7 +25,6 @@ import com.masai.model.Customer;
 import com.masai.model.User;
 import com.masai.services.LoginLogoutCustomerService;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 /**
  * @author tejas
@@ -36,8 +38,9 @@ public class LoginLogoutCustomerController {
 	@Autowired
 	private LoginLogoutCustomerService loginLogoutCustomerService;
 
-	@GetMapping("/login")
-	public ResponseEntity<CurrentCustomerSession> loginCustomerHandler(@RequestBody User user) throws LoginException, CustomerException {
+	@PostMapping("/login")
+	public ResponseEntity<CurrentCustomerSession> loginCustomerHandler(@Valid @RequestBody User user)
+			throws LoginException, CustomerException {
 
 		CurrentCustomerSession currentCustomerSession = loginLogoutCustomerService.loginCustomer(user);
 
@@ -54,8 +57,8 @@ public class LoginLogoutCustomerController {
 
 	}
 
-	@GetMapping("/authenticate")
-	public ResponseEntity<User> authenticateCustomerHandler(@RequestBody User user, @RequestParam String key)
+	@PostMapping("/authenticate")
+	public ResponseEntity<User> authenticateCustomerHandler(@Valid @RequestBody User user, @RequestParam String key)
 			throws UserException, LoginException, CustomerException {
 
 		User validated_user = loginLogoutCustomerService.authenticateCustomer(user, key);
